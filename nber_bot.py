@@ -29,16 +29,14 @@ pw = 'NBER BOT PASS'
 r = praw.Reddit(user_agent=user_agent)
 r.login(uname, pw)
 
-# Loop
+# 2. Loop
 while True:
     
-    # Decrement all the articles on the queue
-
-    # Check for additional articles
+    # 2.1 Initialize Loop
     if latest_article == None:
         latest_article = feed["items"][0]["title"]
 
-    # Get new items and add them to queue
+    # 2.2 Check for new items and add them to queue
     if feed["items"][0]["title"] != latest_article:
         # If there are new articles
         for i in xrange(0, len(feed["items"])):
@@ -57,12 +55,15 @@ while True:
         # update latest article to top of rss feed
         latest_article = feed["items"][0]["title"]
 
+    # 2.3 Sleep!
+
     # Every 10 seconds (testing only)
     # time.sleep(10)
 
     # Every 4 Hours
     time.sleep(4*60*60)
 
+    # 2.4 Post Links from Queue
     try:
         # Get new post
         curr_post = queue.pop()
