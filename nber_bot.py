@@ -22,9 +22,9 @@ feed = feedparser.parse(feed_url)
 latest_article = None
 queue = []
 
-user_agent = 'USER AGENT'
-uname = 'NBER BOT'
-pw = 'NBER BOT PASS'
+user_agent = ''
+uname = ''
+pw = ''
 
 r = praw.Reddit(user_agent=user_agent)
 r.login(uname, pw)
@@ -33,8 +33,8 @@ r.login(uname, pw)
 while True:
     
     # 2.1 Initialize Loop
-    if latest_article == None:
-        latest_article = feed["items"][0]["title"]
+    #if latest_article == None:
+    #    latest_article = feed["items"][0]["title"]
 
     # 2.2 Check for new items and add them to queue
     if feed["items"][0]["title"] != latest_article:
@@ -55,14 +55,6 @@ while True:
         # update latest article to top of rss feed
         latest_article = feed["items"][0]["title"]
 
-    # 2.3 Sleep!
-
-    # Every 10 seconds (testing only)
-    # time.sleep(10)
-
-    # Every 4 Hours
-    time.sleep(4*60*60)
-
     # 2.4 Post Links from Queue
     try:
         # Get new post
@@ -71,13 +63,23 @@ while True:
         print "Posting ", curr_post['title']
 
         # Format and submit the post
-        textbody = curr_post['summary'] + '\n\n\n' + curr_post['link']
+        # textbody = curr_post['summary'] + '\n\n\n' + curr_post['link']
+        link = curr_post['link']
         title = "NBER:" + curr_post['title']
 
-        r.submit('reddit_api_test', title, text=textbody)
-        
-    except:
+        r.submit('economics', title, url=link)
+        print "Done Posting"
+    except Exception as e:
+        print e
         print "No New Posts!"
+
+    # 2.3 Sleep!
+
+    # Every 10 seconds (testing only)
+    # time.sleep(10)
+
+    # Every 4 Hours
+    time.sleep(4*60*60)
 
 
 
